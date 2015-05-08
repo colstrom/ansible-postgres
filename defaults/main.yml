@@ -12,3 +12,37 @@ postgresql_accepts_external_connections: yes
 postgresql_backup_enabled: no
 postgresql_backup_path: /data/backup/postgresql
 postgresql_backup_frequency: daily
+
+postgresql_max_connections: "{{ ansible_processor_vcpus * 2 * 100 }}"
+
+postgresql_shared_preload_libraries:
+  - pg_stat_statements
+  - auto_explain
+
+postgresql_shared_buffers: "{{ ansible_memtotal_mb * 0.15 | int }}MB"
+postgresql_effective_cache_size: "{{ ansible_memtotal_mb * 0.75 | int }}MB"
+postgresql_work_mem: 8MB
+postgresql_checkpoint_segments: 16
+postgresql_wal_buffers: 16MB
+postgresql_track_activity_query_size: 2048
+postgresql_pg_stat_statements_track: all
+postgresql_auto_explain_log_analyze: yes
+postgresql_auto_explain_log_buffers: yes
+postgresql_auto_explain_log_format: text
+postgresql_auto_explain_log_min_duration: 20ms
+postgresql_auto_explain_log_nested_statements: yes
+postgresql_auto_explain_log_timing: no
+postgresql_auto_explain_log_triggers: no
+postgresql_auto_explain_log_verbose: no
+
+postgresql_log_destination: stderr
+postgresql_logging_collector: on
+postgresql_log_root: "{{ log_root | default('/var/log') }}/postgres" # For consistency with other roles.
+postgresql_log_directory: "{{ postgresql_log_root }}"
+postgresql_log_filename: 'postgresql-%Y-%m-%d_%H%M%S.log'
+postgresql_log_file_mode: '0600'
+postgresql_log_rotation_age: 1d
+postgresql_log_rotation_size: 10MB
+postgresql_log_min_duration_statement: 20
+postgresql_log_line_prefix: '%t [%p]: [%l-1]'
+postgresql_lc_messages: C
